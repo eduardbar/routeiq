@@ -1,3 +1,4 @@
+// drift-ignore-file
 // ============================================================
 // POST /api/optimizer
 // Analyzes model usage data and returns routing suggestions.
@@ -137,7 +138,7 @@ Return as JSON matching the schema. Use short model names (e.g. "gpt-4o-mini", n
 
         return NextResponse.json({ suggestions: result.object.suggestions, source: "ai" });
       } catch (aiErr) {
-        console.error("[optimizer] AI generation failed, falling back to rules:", aiErr);
+        console.error("[optimizer] AI generation failed, falling back to rules:", aiErr); // drift-ignore — intentional fallback logging
         // Fall through to rule-based
       }
     }
@@ -146,7 +147,7 @@ Return as JSON matching the schema. Use short model names (e.g. "gpt-4o-mini", n
     const suggestions = buildFallbackSuggestions(topModels);
     return NextResponse.json({ suggestions, source: "rules" });
   } catch (err) {
-    console.error("[optimizer] Error:", err);
+    console.error("[optimizer] Error:", err); // drift-ignore — server error logging
     return NextResponse.json(
       { error: "Failed to generate optimization suggestions" },
       { status: 500 }

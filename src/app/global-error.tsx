@@ -14,7 +14,7 @@ export default function GlobalError({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("[RouteIQ] Unhandled error:", error);
+    console.error("[RouteIQ] Unhandled error:", error); // drift-ignore — intentional error boundary logging
   }, [error]);
 
   return (

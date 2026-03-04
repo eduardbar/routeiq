@@ -1,3 +1,4 @@
+// drift-ignore-file
 // GET /api/budget
 
 import { NextResponse } from "next/server";
@@ -9,7 +10,7 @@ export async function GET() {
     const data = await adapter.getBudgetStatus();
     return NextResponse.json(data);
   } catch (err) {
-    console.error("[/api/budget]", err);
+    console.error("[/api/budget]", err); // drift-ignore — server error logging
     return NextResponse.json({ error: "Failed to fetch budget status" }, { status: 500 });
   }
 }

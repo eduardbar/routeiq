@@ -30,7 +30,7 @@ export function OptimizerView() {
       setResult(data);
     } catch (err) {
       setError("Failed to run analysis. Please try again.");
-      console.error(err);
+      console.error("[OptimizerView] Analysis failed:", err);
     } finally {
       setLoading(false);
     }

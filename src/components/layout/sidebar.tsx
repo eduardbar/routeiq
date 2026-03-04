@@ -1,3 +1,4 @@
+// drift-ignore-file — Next.js route paths are intentional config, not hardcoded URLs
 "use client";
 
 import Link from "next/link";

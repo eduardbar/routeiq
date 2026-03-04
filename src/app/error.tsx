@@ -14,7 +14,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error("[RouteIQ] Route error:", error);
+    console.error("[RouteIQ] Route error:", error); // drift-ignore — intentional error boundary logging
   }, [error]);
 
   return (

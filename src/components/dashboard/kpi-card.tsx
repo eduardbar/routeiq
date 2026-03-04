@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { formatCost, formatLatency, formatPercent, formatNumber } from "@/lib/utils/formatting";
 
 interface KpiCardProps {
   title: string;
@@ -16,31 +17,12 @@ interface KpiCardProps {
   alertThreshold?: number; // highlight red when value exceeds this
 }
 
-function formatValue(value: number, format: KpiCardProps["format"]): string {
-  switch (format) {
-    case "currency":
-      return value < 0.01
-        ? `$${(value * 1000).toFixed(2)}m` // millicents
-        : value < 1
-        ? `$${value.toFixed(4)}`
-        : value < 100
-        ? `$${value.toFixed(2)}`
-        : `$${value.toFixed(0)}`;
-    case "percent":
-      return `${value.toFixed(1)}%`;
-    case "latency":
-      return value >= 1000
-        ? `${(value / 1000).toFixed(2)}s`
-        : `${Math.round(value)}ms`;
-    case "number":
-    default:
-      return value >= 1_000_000
-        ? `${(value / 1_000_000).toFixed(1)}M`
-        : value >= 1_000
-        ? `${(value / 1_000).toFixed(1)}K`
-        : value.toLocaleString();
-  }
-}
+const FORMAT_FNS: Record<KpiCardProps["format"], (v: number) => string> = {
+  currency: formatCost,
+  latency:  formatLatency,
+  percent:  formatPercent,
+  number:   formatNumber,
+};
 
 export function KpiCard({
   title,
@@ -106,7 +88,7 @@ export function KpiCard({
                 isAlert && "text-red-500"
               )}
             >
-              {formatValue(value, format)}
+              {FORMAT_FNS[format](value)}
             </p>
             {delta !== undefined && (
               <div className={cn("flex items-center gap-1 mt-1", deltaColor)}>

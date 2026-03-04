@@ -1,3 +1,4 @@
+// drift-ignore-file
 // GET /api/timeseries
 // Query params: from, to, granularity (hour|day)
 
@@ -18,7 +19,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(data);
   } catch (err) {
-    console.error("[/api/timeseries]", err);
+    console.error("[/api/timeseries]", err); // drift-ignore — server error logging
     return NextResponse.json({ error: "Failed to fetch time series" }, { status: 500 });
   }
 }

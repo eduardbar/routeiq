@@ -1,3 +1,4 @@
+// drift-ignore-file — generated shadcn/ui component, do not modify
 "use client"
 
 import * as React from "react"

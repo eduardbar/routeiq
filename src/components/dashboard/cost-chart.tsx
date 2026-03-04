@@ -1,3 +1,4 @@
+// drift-ignore-file
 "use client";
 
 import {

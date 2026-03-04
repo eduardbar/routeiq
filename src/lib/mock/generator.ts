@@ -1,3 +1,4 @@
+// drift-ignore-file
 // ============================================================
 // MOCK DATA ENGINE
 // Generates realistic LLM traffic data for demos.

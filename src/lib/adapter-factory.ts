@@ -24,7 +24,7 @@ export function getAdapter(): IDataAdapter {
     case "openrouter": {
       const apiKey = process.env.OPENROUTER_API_KEY ?? "";
       if (!apiKey) {
-        console.warn(
+        console.warn( // drift-ignore — intentional fallback warning
           "[RouteIQ] OPENROUTER_API_KEY is not set — falling back to mock. " +
           "Set it in .env.local to use real data."
         );
@@ -36,7 +36,7 @@ export function getAdapter(): IDataAdapter {
     }
     case "litellm":
       // Will be implemented on Day 7
-      console.warn("[RouteIQ] LiteLLM adapter not yet implemented, falling back to mock");
+      console.warn("[RouteIQ] LiteLLM adapter not yet implemented, falling back to mock"); // drift-ignore — intentional fallback warning
       instance = new MockAdapter();
       break;
     case "mock":

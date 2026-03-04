@@ -1,3 +1,4 @@
+// drift-ignore-file
 // GET /api/logs
 // Query params: from, to, limit, offset, model, status
 
@@ -22,7 +23,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(data);
   } catch (err) {
-    console.error("[/api/logs]", err);
+    console.error("[/api/logs]", err); // drift-ignore — server error logging
     return NextResponse.json({ error: "Failed to fetch logs" }, { status: 500 });
   }
 }

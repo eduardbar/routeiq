@@ -8,23 +8,49 @@ interface BudgetAlertBannerProps {
   budget: BudgetStatus;
 }
 
+// ── Pure helpers (keep component CC low) ─────────────────────
+
+function calcPct(spent: number, limit: number): number {
+  return limit > 0 ? (spent / limit) * 100 : 0;
+}
+
+type Severity = "ok" | "warning" | "critical" | "projected";
+
+function getSeverity(dailyPct: number, monthlyPct: number, projectedPct: number): Severity {
+  if (dailyPct >= 100 || monthlyPct >= 100) return "critical";
+  if (dailyPct >= 80 || monthlyPct >= 80) return "warning";
+  if (projectedPct >= 90) return "projected";
+  return "ok";
+}
+
+function getExceededSubject(budget: BudgetStatus) {
+  const subject = budget.dailySpentUsd >= budget.dailyLimitUsd ? "daily" : "monthly";
+  return {
+    subject,
+    spent:  subject === "daily" ? budget.dailySpentUsd  : budget.monthlySpentUsd,
+    limit:  subject === "daily" ? budget.dailyLimitUsd  : budget.monthlyLimitUsd,
+  };
+}
+
+function getWarningSubject(budget: BudgetStatus, dailyPct: number, monthlyPct: number) {
+  const subject = dailyPct >= 80 ? "daily" : "monthly";
+  return {
+    subject,
+    pct:   subject === "daily" ? dailyPct   : monthlyPct,
+    limit: subject === "daily" ? budget.dailyLimitUsd : budget.monthlyLimitUsd,
+  };
+}
+
+// ── Component ─────────────────────────────────────────────────
+
 export function BudgetAlertBanner({ budget }: BudgetAlertBannerProps) {
-  const dailyPct = budget.dailyLimitUsd > 0
-    ? (budget.dailySpentUsd / budget.dailyLimitUsd) * 100
-    : 0;
-  const monthlyPct = budget.monthlyLimitUsd > 0
-    ? (budget.monthlySpentUsd / budget.monthlyLimitUsd) * 100
-    : 0;
-  const projectedPct = budget.monthlyLimitUsd > 0
-    ? (budget.projectedMonthlyUsd / budget.monthlyLimitUsd) * 100
-    : 0;
+  const dailyPct     = calcPct(budget.dailySpentUsd,     budget.dailyLimitUsd);
+  const monthlyPct   = calcPct(budget.monthlySpentUsd,   budget.monthlyLimitUsd);
+  const projectedPct = calcPct(budget.projectedMonthlyUsd, budget.monthlyLimitUsd);
 
-  // Severity: critical ≥ 100%, warning ≥ 80%, projected warning ≥ 90%
-  const isCritical = dailyPct >= 100 || monthlyPct >= 100;
-  const isWarning = !isCritical && (dailyPct >= 80 || monthlyPct >= 80);
-  const isProjectedWarning = !isCritical && !isWarning && projectedPct >= 90;
+  const severity = getSeverity(dailyPct, monthlyPct, projectedPct);
 
-  if (!isCritical && !isWarning && !isProjectedWarning) {
+  if (severity === "ok") {
     return (
       <div className="flex items-center gap-3 px-4 py-3 rounded-lg border border-emerald-500/20 bg-emerald-500/5 text-emerald-400">
         <CheckCircle2 className="w-4 h-4 shrink-0" />
@@ -38,10 +64,8 @@ export function BudgetAlertBanner({ budget }: BudgetAlertBannerProps) {
     );
   }
 
-  if (isCritical) {
-    const subject = dailyPct >= 100 ? "daily" : "monthly";
-    const spent = subject === "daily" ? budget.dailySpentUsd : budget.monthlySpentUsd;
-    const limit = subject === "daily" ? budget.dailyLimitUsd : budget.monthlyLimitUsd;
+  if (severity === "critical") {
+    const { subject, spent, limit } = getExceededSubject(budget);
     return (
       <div className="flex items-start gap-3 px-4 py-3 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400">
         <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -58,10 +82,8 @@ export function BudgetAlertBanner({ budget }: BudgetAlertBannerProps) {
     );
   }
 
-  if (isWarning) {
-    const subject = dailyPct >= 80 ? "daily" : "monthly";
-    const pct = subject === "daily" ? dailyPct : monthlyPct;
-    const limit = subject === "daily" ? budget.dailyLimitUsd : budget.monthlyLimitUsd;
+  if (severity === "warning") {
+    const { subject, pct, limit } = getWarningSubject(budget, dailyPct, monthlyPct);
     return (
       <div className="flex items-start gap-3 px-4 py-3 rounded-lg border border-amber-500/30 bg-amber-500/10 text-amber-400">
         <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
@@ -81,7 +103,7 @@ export function BudgetAlertBanner({ budget }: BudgetAlertBannerProps) {
     );
   }
 
-  // Projected warning
+  // severity === "projected"
   return (
     <div className="flex items-start gap-3 px-4 py-3 rounded-lg border border-amber-500/20 bg-amber-500/5 text-amber-300">
       <TrendingUp className="w-4 h-4 shrink-0 mt-0.5" />

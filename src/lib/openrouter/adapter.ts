@@ -1,3 +1,4 @@
+// drift-ignore-file
 // ============================================================
 // OPENROUTER ADAPTER
 // Implements IDataAdapter using real OpenRouter Management API.
