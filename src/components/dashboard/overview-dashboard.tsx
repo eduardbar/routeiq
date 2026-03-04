@@ -10,6 +10,7 @@ import { CostChart } from "@/components/dashboard/cost-chart";
 import { LatencyChart } from "@/components/dashboard/latency-chart";
 import { DateRangePicker } from "@/components/dashboard/date-range-picker";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useProviderHeaders } from "@/contexts/provider-config-context";
 import {
   Activity,
   DollarSign,
@@ -30,6 +31,7 @@ const RANGES = [
 export function OverviewDashboard() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { getApiHeaders } = useProviderHeaders();
 
   const [rangeDays, setRangeDays] = useState(
     parseInt(searchParams.get("range") ?? "7", 10) || 7
@@ -45,13 +47,15 @@ export function OverviewDashboard() {
       const to = new Date();
       const from = subDays(to, rangeDays);
       const granularity = rangeDays <= 1 ? "hour" : "day";
+      const headers = getApiHeaders();
 
       const [overviewRes, timeSeriesRes, configRes] = await Promise.all([
-        fetch(`/api/overview?from=${from.toISOString()}&to=${to.toISOString()}`),
+        fetch(`/api/overview?from=${from.toISOString()}&to=${to.toISOString()}`, { headers }),
         fetch(
-          `/api/timeseries?from=${from.toISOString()}&to=${to.toISOString()}&granularity=${granularity}`
+          `/api/timeseries?from=${from.toISOString()}&to=${to.toISOString()}&granularity=${granularity}`,
+          { headers }
         ),
-        fetch("/api/config"),
+        fetch("/api/config", { headers }),
       ]);
 
       const [overviewData, timeSeriesData, configData] = await Promise.all([
@@ -68,7 +72,7 @@ export function OverviewDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [rangeDays]);
+  }, [rangeDays, getApiHeaders]);
 
   useEffect(() => {
     fetchData();

@@ -3,7 +3,7 @@
 // Query params: from, to, granularity (hour|day)
 
 import { NextResponse } from "next/server";
-import { getAdapter } from "@/lib/adapter-factory";
+import { getAdapterForRequest } from "@/lib/adapter-factory";
 
 export async function GET(request: Request) {
   try {
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     const to = searchParams.get("to") ? new Date(searchParams.get("to")!) : new Date();
     const granularity = (searchParams.get("granularity") ?? "day") as "hour" | "day";
 
-    const adapter = getAdapter();
+    const adapter = getAdapterForRequest(new Headers(request.headers));
     const data = await adapter.getTimeSeries(from, to, granularity);
 
     return NextResponse.json(data);

@@ -3,7 +3,7 @@
 // Query params: from, to, limit, offset, model, status
 
 import { NextResponse } from "next/server";
-import { getAdapter } from "@/lib/adapter-factory";
+import { getAdapterForRequest } from "@/lib/adapter-factory";
 import type { RequestStatus } from "@/types";
 
 export async function GET(request: Request) {
@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     const model = searchParams.get("model") ?? undefined;
     const status = (searchParams.get("status") ?? undefined) as RequestStatus | undefined;
 
-    const adapter = getAdapter();
+    const adapter = getAdapterForRequest(new Headers(request.headers));
     const data = await adapter.getRequestLogs({ from, to, limit, offset, model, status });
 
     return NextResponse.json(data);

@@ -9,6 +9,7 @@ import { ModelCostChart } from "@/components/models/model-cost-chart";
 import { ModelRadarChart } from "@/components/models/model-radar-chart";
 import { ModelLatencyChart } from "@/components/models/model-latency-chart";
 import { ModelP95Chart } from "@/components/models/model-p95-chart";
+import { useProviderHeaders } from "@/contexts/provider-config-context";
 
 const RANGES = [
   { label: "24h", days: 1 },
@@ -21,6 +22,7 @@ export function ModelsView() {
   const [models, setModels] = useState<ModelStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<string[]>([]);
+  const { getApiHeaders } = useProviderHeaders();
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -28,7 +30,8 @@ export function ModelsView() {
       const to = new Date();
       const from = subDays(to, rangeDays);
       const res = await fetch(
-        `/api/models?from=${from.toISOString()}&to=${to.toISOString()}`
+        `/api/models?from=${from.toISOString()}&to=${to.toISOString()}`,
+        { headers: getApiHeaders() }
       );
       const data: ModelStats[] = await res.json();
       setModels(data);
@@ -39,7 +42,7 @@ export function ModelsView() {
     } finally {
       setLoading(false);
     }
-  }, [rangeDays]);
+  }, [rangeDays, getApiHeaders]);
 
   useEffect(() => {
     fetchData();

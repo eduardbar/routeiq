@@ -3,7 +3,7 @@
 // Query params: from, to
 
 import { NextResponse } from "next/server";
-import { getAdapter } from "@/lib/adapter-factory";
+import { getAdapterForRequest } from "@/lib/adapter-factory";
 
 export async function GET(request: Request) {
   try {
@@ -13,7 +13,7 @@ export async function GET(request: Request) {
       : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
     const to = searchParams.get("to") ? new Date(searchParams.get("to")!) : new Date();
 
-    const adapter = getAdapter();
+    const adapter = getAdapterForRequest(new Headers(request.headers));
     const data = await adapter.getModelStats(from, to);
 
     return NextResponse.json(data);

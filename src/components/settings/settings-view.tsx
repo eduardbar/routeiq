@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { ConnectionCard } from "./connection-card";
+import { RuntimeProviderConfig } from "./runtime-provider-config";
 
 interface ConfigStatus {
   dataSource: "mock" | "openrouter" | "litellm";
@@ -164,7 +165,7 @@ export function SettingsView() {
             Active Data Source
           </CardTitle>
           <CardDescription>
-            Controlled by the <code className="text-xs bg-muted px-1 rounded">NEXT_PUBLIC_DATA_SOURCE</code> environment variable.
+            Controlled by the <code className="text-xs bg-muted px-1 rounded">NEXT_PUBLIC_DATA_SOURCE</code> environment variable, or overridden below.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -217,6 +218,11 @@ export function SettingsView() {
           </Alert>
         </CardContent>
       </Card>
+
+      <Separator />
+
+      {/* Runtime provider config — UI-based, no .env.local needed */}
+      <RuntimeProviderConfig />
 
       <Separator />
 

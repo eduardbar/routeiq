@@ -2,11 +2,11 @@
 // GET /api/budget
 
 import { NextResponse } from "next/server";
-import { getAdapter } from "@/lib/adapter-factory";
+import { getAdapterForRequest } from "@/lib/adapter-factory";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const adapter = getAdapter();
+    const adapter = getAdapterForRequest(new Headers(request.headers));
     const data = await adapter.getBudgetStatus();
     return NextResponse.json(data);
   } catch (err) {

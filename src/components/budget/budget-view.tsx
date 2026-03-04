@@ -10,20 +10,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCost } from "@/lib/utils/formatting";
 import { CalendarDays, TrendingUp, Zap, Clock } from "lucide-react";
+import { useProviderHeaders } from "@/contexts/provider-config-context";
 
 export function BudgetView() {
   const [budget, setBudget] = useState<BudgetStatus | null>(null);
   const [timeseries, setTimeseries] = useState<TimeSeriesPoint[]>([]);
   const [loading, setLoading] = useState(true);
+  const { getApiHeaders } = useProviderHeaders();
 
   useEffect(() => {
     async function fetchAll() {
       setLoading(true);
       try {
+        const headers = getApiHeaders();
         const [budgetRes, tsRes] = await Promise.all([
-          fetch("/api/budget"),
+          fetch("/api/budget", { headers }),
           fetch(
-            `/api/timeseries?from=${subDays(new Date(), 30).toISOString()}&to=${new Date().toISOString()}&granularity=day`
+            `/api/timeseries?from=${subDays(new Date(), 30).toISOString()}&to=${new Date().toISOString()}&granularity=day`,
+            { headers }
           ),
         ]);
         const [budgetData, tsData] = await Promise.all([

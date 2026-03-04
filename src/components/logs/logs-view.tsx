@@ -8,6 +8,7 @@ import type { RequestLog, RequestStatus } from "@/types";
 import { LogsTable } from "@/components/logs/logs-table";
 import { LogsFilters } from "@/components/logs/logs-filters";
 import { LogDetailSheet } from "@/components/logs/log-detail-sheet";
+import { useProviderHeaders } from "@/contexts/provider-config-context";
 
 const PAGE_SIZE = 50;
 
@@ -29,6 +30,7 @@ export interface LogFilters {
 export function LogsView() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { getApiHeaders } = useProviderHeaders();
 
   const [filters, setFilters] = useState<LogFilters>({
     rangeDays: parseInt(searchParams.get("range") ?? "7", 10) || 7,
@@ -56,7 +58,7 @@ export function LogsView() {
       if (filters.model !== "all") params.set("model", filters.model);
       if (filters.status !== "all") params.set("status", filters.status);
 
-      const res = await fetch(`/api/logs?${params}`);
+      const res = await fetch(`/api/logs?${params}`, { headers: getApiHeaders() });
       const data = await res.json();
       setLogs(data.logs);
       setTotal(data.total);
@@ -99,7 +101,7 @@ export function LogsView() {
       if (filters.model !== "all") params.set("model", filters.model);
       if (filters.status !== "all") params.set("status", filters.status);
 
-      const res = await fetch(`/api/logs?${params}`);
+      const res = await fetch(`/api/logs?${params}`, { headers: getApiHeaders() });
       const data = (await res.json()) as { logs: RequestLog[]; total: number };
 
       const header =
