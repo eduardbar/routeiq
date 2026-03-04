@@ -48,8 +48,8 @@ AI-powered analysis (Vercel AI SDK + GPT-4o-mini) that scans your request patter
 
 Falls back to rule-based heuristics when no AI key is configured.
 
-### ⚙️ Settings
-Live connection status indicator per data source. Step-by-step env var configuration guide with inline code examples.
+### ⚙️ Settings & Multi-Provider Runtime Config
+Live connection status indicator per data source. Step-by-step env var configuration guide with inline code examples. **Runtime provider switching** — configure OpenRouter or LiteLLM API keys directly in the UI (stored in `localStorage`) without touching `.env` files. No redeployment needed to connect a new data source.
 
 ---
 
@@ -98,8 +98,8 @@ Three implementations today — the same code works with all three:
 │  getBudgetStatus()                                  │
 └──────────┬──────────────────┬───────────────────────┘
            │                  │                │
-    MockAdapter        OpenRouterAdapter   LiteLLMAdapter
-    (seeded, no key)   (real API)          (plug-in ready)
+     MockAdapter        OpenRouterAdapter   LiteLLMAdapter
+     (seeded, no key)   (real API)          (self-hosted proxy)
 ```
 
 **Why this matters:** Adding a new data source (LiteLLM, Helicone, Langfuse) requires implementing one interface — no changes to UI, API routes, or business logic. This is O(1) complexity for new integrations.
@@ -166,7 +166,7 @@ Every layer is typed end-to-end. The `OverviewStats` type is the single source o
 ## Getting Started
 
 ```bash
-git clone https://github.com/yourusername/routeiq
+git clone https://github.com/eduardbar/routeiq
 cd routeiq
 npm install
 cp .env.example .env.local
@@ -271,7 +271,8 @@ Recharts' `ResponsiveContainer` uses `ResizeObserver` to measure the DOM. During
 
 ## Roadmap
 
-- [ ] **LiteLLM Adapter** — direct integration with self-hosted LiteLLM proxy
+- [x] **LiteLLM Adapter** — direct integration with self-hosted LiteLLM proxy
+- [x] **Multi-provider runtime config** — switch data sources & configure API keys from the UI (no .env edits, no redeploy)
 - [ ] **Alert system** — email/Slack notifications when budget thresholds are crossed
 - [ ] **Custom routing rules** — UI to configure which models handle which request patterns
 - [ ] **Multi-workspace support** — separate views per team/project

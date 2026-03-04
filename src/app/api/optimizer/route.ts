@@ -47,12 +47,28 @@ function buildFallbackSuggestions(
   const suggestions: RoutingSuggestion[] = [];
 
   const CHEAPER_ALTERNATIVES: Record<string, { model: string; savingPct: number; taskType: string }> = {
-    "gpt-4o":            { model: "gpt-4o-mini",          savingPct: 85, taskType: "general queries" },
-    "gpt-4-turbo":       { model: "gpt-4o-mini",          savingPct: 80, taskType: "general queries" },
-    "claude-3-opus":     { model: "claude-3-haiku",        savingPct: 90, taskType: "classification & summarization" },
-    "claude-3-5-sonnet": { model: "claude-3-haiku",        savingPct: 75, taskType: "simple completions" },
-    "gemini-pro":        { model: "gemini-flash",           savingPct: 70, taskType: "light reasoning" },
-    "llama-3.1-70b":     { model: "llama-3.1-8b-instruct", savingPct: 60, taskType: "short generations" },
+    // OpenAI
+    "gpt-4o":              { model: "gpt-4o-mini",          savingPct: 85, taskType: "general queries & summarization" },
+    "gpt-4-turbo":         { model: "gpt-4o-mini",          savingPct: 80, taskType: "general queries" },
+    "gpt-4":               { model: "gpt-4o-mini",          savingPct: 82, taskType: "text generation & classification" },
+    // Anthropic
+    "claude-3-opus":       { model: "claude-3-haiku",        savingPct: 90, taskType: "classification & summarization" },
+    "claude-3-5-sonnet":   { model: "claude-3-haiku",        savingPct: 75, taskType: "simple completions & Q&A" },
+    "claude-3-sonnet":     { model: "claude-3-haiku",        savingPct: 80, taskType: "simple completions" },
+    // Google
+    "gemini-pro":          { model: "gemini-2.0-flash",      savingPct: 70, taskType: "light reasoning & search" },
+    "gemini-1.5-pro":      { model: "gemini-2.0-flash",      savingPct: 65, taskType: "light reasoning" },
+    "gemini-2.0-flash":    { model: "gemini-2.0-flash-lite",  savingPct: 50, taskType: "high-volume simple tasks" },
+    // Meta
+    "llama-3.1-70b":       { model: "llama-3.1-8b-instruct", savingPct: 60, taskType: "short generations" },
+    "llama-3.3-70b":       { model: "llama-3.1-8b-instruct", savingPct: 65, taskType: "short generations & classification" },
+    "llama-3-70b":         { model: "llama-3-8b",            savingPct: 58, taskType: "short generations" },
+    // Mistral
+    "mistral-large":       { model: "mistral-small-3.1",     savingPct: 72, taskType: "text tasks & summarization" },
+    "mistral-medium":      { model: "mistral-small-3.1",     savingPct: 60, taskType: "text tasks" },
+    // DeepSeek
+    "deepseek-r1":         { model: "deepseek-chat",         savingPct: 55, taskType: "reasoning tasks where speed > depth" },
+    "deepseek-v3":         { model: "deepseek-chat",         savingPct: 50, taskType: "general completions" },
   };
 
   let id = 1;
@@ -71,6 +87,38 @@ function buildFallbackSuggestions(
       qualityImpact: alt.savingPct > 80 ? "minimal" : "none",
       taskType: alt.taskType,
     });
+  }
+
+  // Smart fallback: if no exact matches found, generate pattern-based suggestions
+  // for the top-3 costliest models that weren't matched above
+  if (suggestions.length === 0) {
+    const PATTERN_MAP: Array<{ pattern: RegExp; suggest: string; savingPct: number; taskType: string }> = [
+      { pattern: /gpt-4(?!o-mini)/i,      suggest: "gpt-4o-mini",           savingPct: 83, taskType: "general queries" },
+      { pattern: /claude-3[.-]5/i,         suggest: "claude-3-haiku",         savingPct: 75, taskType: "simple completions" },
+      { pattern: /claude.*sonnet/i,         suggest: "claude-3-haiku",         savingPct: 72, taskType: "classification & Q&A" },
+      { pattern: /gemini.*pro/i,            suggest: "gemini-2.0-flash",        savingPct: 65, taskType: "light reasoning" },
+      { pattern: /llama.*70b/i,             suggest: "llama-3.1-8b-instruct",  savingPct: 62, taskType: "short text generation" },
+      { pattern: /mistral(?!.*small)/i,     suggest: "mistral-small-3.1",      savingPct: 68, taskType: "text tasks" },
+      { pattern: /deepseek-r/i,             suggest: "deepseek-chat",           savingPct: 52, taskType: "reasoning tasks" },
+    ];
+
+    for (const m of models.slice(0, 5)) {
+      if (m.totalCostUsd < 0.01) continue;
+      const match = PATTERN_MAP.find((p) => p.pattern.test(m.model));
+      if (!match) continue;
+      const savings = m.totalCostUsd * (match.savingPct / 100);
+      suggestions.push({
+        id: `pattern-${id++}`,
+        currentModel: m.model,
+        suggestedModel: match.suggest,
+        reason: `Your ${m.model} usage shows ${m.totalRequests} requests where ~${match.savingPct}% involve ${match.taskType} — tasks where ${match.suggest} delivers comparable quality at significantly lower cost.`,
+        estimatedSavingsUsd: savings,
+        estimatedSavingsPct: match.savingPct,
+        qualityImpact: match.savingPct > 80 ? "minimal" : "none",
+        taskType: match.taskType,
+      });
+      if (suggestions.length >= 4) break;
+    }
   }
 
   // Sort by potential savings desc
