@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   GitCompare,
@@ -13,6 +14,12 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+
+const SOURCE_LABELS: Record<string, { label: string; color: string }> = {
+  mock:       { label: "Mock data",   color: "bg-gray-500" },
+  openrouter: { label: "OpenRouter",  color: "bg-blue-500" },
+  litellm:    { label: "LiteLLM",     color: "bg-violet-500" },
+};
 
 const NAV_ITEMS = [
   {
@@ -45,6 +52,16 @@ const NAV_ITEMS = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [dataSource, setDataSource] = useState<string>("mock");
+
+  useEffect(() => {
+    fetch("/api/config")
+      .then((r) => r.json())
+      .then((d) => setDataSource(d.dataSource ?? "mock"))
+      .catch(() => {});
+  }, []);
+
+  const sourceInfo = SOURCE_LABELS[dataSource] ?? SOURCE_LABELS.mock;
 
   return (
     <aside className="w-60 border-r border-border bg-card flex flex-col h-full shrink-0">
@@ -105,8 +122,8 @@ export function Sidebar() {
         </Link>
         <div className="mt-3 px-3">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-xs text-muted-foreground">Mock data active</span>
+            <div className={`w-2 h-2 rounded-full ${sourceInfo.color} animate-pulse`} />
+            <span className="text-xs text-muted-foreground">{sourceInfo.label} active</span>
           </div>
         </div>
       </div>
