@@ -8,6 +8,7 @@ import { RequestVolumeChart } from "@/components/dashboard/request-volume-chart"
 import { CostChart } from "@/components/dashboard/cost-chart";
 import { LatencyChart } from "@/components/dashboard/latency-chart";
 import { DateRangePicker } from "@/components/dashboard/date-range-picker";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
   Activity,
   DollarSign,
@@ -15,6 +16,7 @@ import {
   AlertTriangle,
   Layers,
   Zap,
+  Info,
 } from "lucide-react";
 
 const RANGES = [
@@ -28,6 +30,7 @@ export function OverviewDashboard() {
   const [stats, setStats] = useState<OverviewStats | null>(null);
   const [timeSeries, setTimeSeries] = useState<TimeSeriesPoint[]>([]);
   const [loading, setLoading] = useState(true);
+  const [dataSource, setDataSource] = useState<string>("mock");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -36,20 +39,23 @@ export function OverviewDashboard() {
       const from = subDays(to, rangeDays);
       const granularity = rangeDays <= 1 ? "hour" : "day";
 
-      const [overviewRes, timeSeriesRes] = await Promise.all([
+      const [overviewRes, timeSeriesRes, configRes] = await Promise.all([
         fetch(`/api/overview?from=${from.toISOString()}&to=${to.toISOString()}`),
         fetch(
           `/api/timeseries?from=${from.toISOString()}&to=${to.toISOString()}&granularity=${granularity}`
         ),
+        fetch("/api/config"),
       ]);
 
-      const [overviewData, timeSeriesData] = await Promise.all([
+      const [overviewData, timeSeriesData, configData] = await Promise.all([
         overviewRes.json(),
         timeSeriesRes.json(),
+        configRes.json(),
       ]);
 
       setStats(overviewData);
       setTimeSeries(timeSeriesData);
+      setDataSource(configData.dataSource ?? "mock");
     } catch (err) {
       console.error("Failed to fetch overview data", err);
     } finally {
@@ -60,6 +66,9 @@ export function OverviewDashboard() {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  // Detect empty real-data scenario
+  const isEmpty = !loading && stats !== null && stats.totalRequests === 0 && dataSource !== "mock";
 
   return (
     <div className="p-6 space-y-6">
@@ -77,6 +86,18 @@ export function OverviewDashboard() {
           onSelect={setRangeDays}
         />
       </div>
+
+      {/* Empty state banner for real data source with no usage yet */}
+      {isEmpty && (
+        <Alert className="border-blue-500/30 bg-blue-500/5">
+          <Info className="h-4 w-4 text-blue-400" />
+          <AlertDescription className="text-sm text-blue-300">
+            <strong>Connected to OpenRouter</strong> — No usage data found for this period.
+            Start making LLM requests through OpenRouter and the dashboard will populate automatically.
+            Alternatively, set <code className="bg-muted px-1 rounded text-xs">NEXT_PUBLIC_DATA_SOURCE=mock</code> to explore with demo data.
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 xl:grid-cols-3 gap-4">
