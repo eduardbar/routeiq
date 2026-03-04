@@ -5,7 +5,7 @@
 // page reloads — judges don't see numbers jumping around.
 // ============================================================
 
-import { subDays, subHours, addHours, format, startOfDay, startOfHour } from "date-fns";
+import { subDays, subHours, format, startOfDay, startOfHour } from "date-fns";
 import type {
   RequestLog,
   ModelStats,
@@ -13,7 +13,6 @@ import type {
   TimeSeriesPoint,
   BudgetStatus,
   ModelProvider,
-  RequestStatus,
 } from "@/types";
 
 // --- Model catalog with realistic cost/latency profiles ---

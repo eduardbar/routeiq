@@ -4,7 +4,6 @@
 // This is what runs when NEXT_PUBLIC_DATA_SOURCE=mock
 // ============================================================
 
-import { subDays } from "date-fns";
 import type {
   IDataAdapter,
   OverviewStats,

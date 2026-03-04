@@ -179,9 +179,9 @@ export class OpenRouterAdapter implements IDataAdapter {
   async getTimeSeries(
     from: Date,
     to: Date,
-    granularity: "hour" | "day"
+    _granularity: "hour" | "day"
   ): Promise<TimeSeriesPoint[]> {
-    // OpenRouter activity only supports day-level grouping
+    // OpenRouter activity only supports day-level grouping (granularity param ignored)
     const activity = await this.fetchActivity(from, to, "day");
 
     // Build a map by date string for O(1) lookup
@@ -257,12 +257,10 @@ export class OpenRouterAdapter implements IDataAdapter {
     // OpenRouter does NOT provide a paginated list of individual requests
     // on a standard API key. We synthesize log rows from the day-level
     // activity data as a best-effort representation.
-    const activity = await this.fetchActivity(options.from, options.to, "day");
 
     // Build one synthetic log per day per model (model-level activity)
     // For a richer log view, the user should use the Management API or LiteLLM.
     const modelActivity = await this.fetchActivity(options.from, options.to, "model");
-
     const logs: RequestLog[] = [];
     let idCounter = 0;
 
@@ -317,7 +315,6 @@ export class OpenRouterAdapter implements IDataAdapter {
       this.fetchKeyInfo(),
     ]);
 
-    const totalUsage = credits?.total_usage ?? 0;
     const totalCredits = credits?.total_credits ?? 0;
 
     // Key-level limit (if set)

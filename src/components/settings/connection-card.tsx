@@ -1,3 +1,5 @@
+"use client";
+
 import { CheckCircle2, XCircle, ExternalLink, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

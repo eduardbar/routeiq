@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   XCircle,
   RefreshCw,
-  ExternalLink,
   Info,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -216,12 +215,6 @@ export function SettingsView() {
             This means you can switch from mock → OpenRouter → LiteLLM without touching
             a single component. Just change the env var and restart.
           </p>
-          <a
-            href="https://github.com"
-            className="inline-flex items-center gap-1 text-primary hover:underline text-xs mt-1"
-          >
-            View source on GitHub <ExternalLink className="w-3 h-3" />
-          </a>
         </CardContent>
       </Card>
     </div>
