@@ -33,6 +33,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import type { TimeSeriesPoint } from "@/types";
 import { formatCost } from "@/lib/utils/formatting";
+import { useIsClient } from "@/hooks/use-is-client";
 
 interface SpendForecastChartProps {
   timeseries: TimeSeriesPoint[];
@@ -131,6 +132,7 @@ export function SpendForecastChart({
   avgDailyBurn,
   loading,
 }: SpendForecastChartProps) {
+  const isClient = useIsClient();
   const data = buildChartData(timeseries, avgDailyBurn);
   const todayLabel = format(new Date(), "MMM d");
 
@@ -143,7 +145,7 @@ export function SpendForecastChart({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {loading ? (
+        {loading || !isClient ? (
           <div className="h-64 bg-muted animate-pulse rounded-lg" />
         ) : (
           <ResponsiveContainer width="100%" height={260}>

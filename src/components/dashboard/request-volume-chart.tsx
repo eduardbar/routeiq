@@ -30,6 +30,7 @@ import {
 import { format, parseISO } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import type { TimeSeriesPoint } from "@/types";
+import { useIsClient } from "@/hooks/use-is-client";
 
 interface RequestVolumeChartProps {
   data: TimeSeriesPoint[];
@@ -70,6 +71,7 @@ function CustomTooltip({
 }
 
 export function RequestVolumeChart({ data, loading }: RequestVolumeChartProps) {
+  const isClient = useIsClient();
   return (
     <Card>
       <CardHeader className="pb-4">
@@ -77,7 +79,7 @@ export function RequestVolumeChart({ data, loading }: RequestVolumeChartProps) {
         <CardDescription>Total requests over time</CardDescription>
       </CardHeader>
       <CardContent>
-        {loading ? (
+        {loading || !isClient ? (
           <div className="h-52 bg-muted animate-pulse rounded-lg" />
         ) : (
           <ResponsiveContainer width="100%" height={210}>

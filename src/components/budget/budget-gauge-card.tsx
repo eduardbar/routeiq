@@ -20,6 +20,7 @@ import {
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCost } from "@/lib/utils/formatting";
+import { useIsClient } from "@/hooks/use-is-client";
 
 interface BudgetGaugeCardProps {
   label: string;
@@ -36,6 +37,7 @@ function getSeverityColor(pct: number): string {
 }
 
 export function BudgetGaugeCard({ label, spent, limit, icon }: BudgetGaugeCardProps) {
+  const isClient = useIsClient();
   const pct = limit > 0 ? Math.min((spent / limit) * 100, 100) : 0;
   const color = getSeverityColor(pct);
 
@@ -56,26 +58,30 @@ export function BudgetGaugeCard({ label, spent, limit, icon }: BudgetGaugeCardPr
       <CardContent className="pt-0">
         {/* Gauge */}
         <div className="relative h-36">
-          <ResponsiveContainer width="100%" height="100%">
-            <RadialBarChart
-              cx="50%"
-              cy="75%"
-              innerRadius="60%"
-              outerRadius="90%"
-              startAngle={200}
-              endAngle={-20}
-              data={data}
-              barSize={12}
-            >
-              <RadialBar
-                dataKey="value"
-                cornerRadius={6}
-                background={false}
-              />
-            </RadialBarChart>
-          </ResponsiveContainer>
+          {isClient ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <RadialBarChart
+                cx="50%"
+                cy="75%"
+                innerRadius="60%"
+                outerRadius="90%"
+                startAngle={200}
+                endAngle={-20}
+                data={data}
+                barSize={12}
+              >
+                <RadialBar
+                  dataKey="value"
+                  cornerRadius={6}
+                  background={false}
+                />
+              </RadialBarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="w-full h-full bg-muted animate-pulse rounded-lg" />
+          )}
 
-          {/* Center text overlay */}
+          {/* Center text overlay — always visible */}
           <div className="absolute inset-0 flex flex-col items-center justify-center mt-4">
             <span className="text-2xl font-bold tabular-nums" style={{ color }}>
               {pct.toFixed(0)}%

@@ -32,6 +32,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import type { ModelStats } from "@/types";
 import { getProviderConfig } from "@/lib/utils/formatting";
+import { useIsClient } from "@/hooks/use-is-client";
 
 interface ModelRadarChartProps {
   models: ModelStats[];
@@ -91,6 +92,7 @@ function normalizeMetrics(models: ModelStats[]) {
 }
 
 export function ModelRadarChart({ models, loading }: ModelRadarChartProps) {
+  const isClient = useIsClient();
   const data = normalizeMetrics(models);
 
   return (
@@ -102,7 +104,7 @@ export function ModelRadarChart({ models, loading }: ModelRadarChartProps) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {loading ? (
+        {loading || !isClient ? (
           <div className="h-72 bg-muted animate-pulse rounded-lg" />
         ) : models.length < 2 ? (
           <div className="h-72 flex items-center justify-center text-muted-foreground text-sm">

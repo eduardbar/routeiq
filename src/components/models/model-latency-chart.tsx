@@ -15,6 +15,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import type { ModelStats } from "@/types";
 import { getProviderConfig, formatLatency } from "@/lib/utils/formatting";
+import { useIsClient } from "@/hooks/use-is-client";
 
 interface ModelLatencyChartProps {
   models: ModelStats[];
@@ -49,6 +50,7 @@ function CustomTooltip({
 }
 
 export function ModelLatencyChart({ models, loading }: ModelLatencyChartProps) {
+  const isClient = useIsClient();
   const data = [...models].sort((a, b) => a.avgLatencyMs - b.avgLatencyMs);
   const avg =
     models.length > 0
@@ -62,7 +64,7 @@ export function ModelLatencyChart({ models, loading }: ModelLatencyChartProps) {
         <CardDescription>Avg and P95 response time per model</CardDescription>
       </CardHeader>
       <CardContent>
-        {loading ? (
+        {loading || !isClient ? (
           <div className="h-52 bg-muted animate-pulse rounded-lg" />
         ) : (
           <ResponsiveContainer width="100%" height={220}>

@@ -22,6 +22,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import type { ModelStats } from "@/types";
 import { getProviderConfig, formatCost } from "@/lib/utils/formatting";
+import { useIsClient } from "@/hooks/use-is-client";
 
 interface ModelCostChartProps {
   models: ModelStats[];
@@ -60,6 +61,7 @@ function CustomTooltip({
 }
 
 export function ModelCostChart({ models, loading }: ModelCostChartProps) {
+  const isClient = useIsClient();
   const data = [...models].sort((a, b) => b.totalCostUsd - a.totalCostUsd);
 
   return (
@@ -69,7 +71,7 @@ export function ModelCostChart({ models, loading }: ModelCostChartProps) {
         <CardDescription>Total USD spend per model in period</CardDescription>
       </CardHeader>
       <CardContent>
-        {loading ? (
+        {loading || !isClient ? (
           <div className="h-52 bg-muted animate-pulse rounded-lg" />
         ) : (
           <ResponsiveContainer width="100%" height={220}>

@@ -81,7 +81,7 @@ export function OverviewDashboard() {
             Overview
           </h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            Monitor your LLM traffic, costs, and performance
+            Monitor your LLM traffic, costs, and performance.
           </p>
         </div>
         <DateRangePicker
@@ -164,8 +164,41 @@ export function OverviewDashboard() {
         <RequestVolumeChart data={timeSeries} loading={loading} />
         <CostChart data={timeSeries} loading={loading} />
       </div>
-      <div className="grid grid-cols-1">
-        <LatencyChart data={timeSeries} loading={loading} />
+      {/* Charts — row 2: latency full width */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+        <div className="xl:col-span-2">
+          <LatencyChart data={timeSeries} loading={loading} />
+        </div>
+        <div className="flex flex-col gap-4">
+          <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-1">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Total Tokens</p>
+            <p className="text-2xl font-bold tabular-nums">
+              {loading ? "—" : (() => {
+                const total = timeSeries.reduce((s, p) => s + p.tokens, 0);
+                if (total >= 1_000_000) return `${(total / 1_000_000).toFixed(1)}M`;
+                if (total >= 1_000) return `${Math.round(total / 1_000)}k`;
+                return String(total);
+              })()}
+            </p>
+            <p className="text-xs text-muted-foreground">across all requests</p>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-1">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Avg Cost / Request</p>
+            <p className="text-2xl font-bold tabular-nums text-emerald-500">
+              {loading ? "—" : stats && stats.totalRequests > 0
+                ? `$${(stats.totalCostUsd / stats.totalRequests).toFixed(4)}`
+                : "$0.0000"}
+            </p>
+            <p className="text-xs text-muted-foreground">per LLM call</p>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-1">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Success Rate</p>
+            <p className="text-2xl font-bold tabular-nums text-primary">
+              {loading ? "—" : `${(100 - (stats?.errorRate ?? 0)).toFixed(1)}%`}
+            </p>
+            <p className="text-xs text-muted-foreground">of requests succeeded</p>
+          </div>
+        </div>
       </div>
     </div>
   );

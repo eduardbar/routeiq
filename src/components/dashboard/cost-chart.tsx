@@ -13,6 +13,7 @@ import {
 import { format, parseISO } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import type { TimeSeriesPoint } from "@/types";
+import { useIsClient } from "@/hooks/use-is-client";
 
 interface CostChartProps {
   data: TimeSeriesPoint[];
@@ -42,6 +43,7 @@ function CustomTooltip({
 }
 
 export function CostChart({ data, loading }: CostChartProps) {
+  const isClient = useIsClient();
   return (
     <Card>
       <CardHeader className="pb-4">
@@ -49,7 +51,7 @@ export function CostChart({ data, loading }: CostChartProps) {
         <CardDescription>LLM spend per day across all models</CardDescription>
       </CardHeader>
       <CardContent>
-        {loading ? (
+        {loading || !isClient ? (
           <div className="h-52 bg-muted animate-pulse rounded-lg" />
         ) : (
           <ResponsiveContainer width="100%" height={210}>

@@ -14,6 +14,7 @@ import {
 import { format, parseISO } from "date-fns";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import type { TimeSeriesPoint } from "@/types";
+import { useIsClient } from "@/hooks/use-is-client";
 
 interface LatencyChartProps {
   data: TimeSeriesPoint[];
@@ -43,6 +44,7 @@ function CustomTooltip({
 }
 
 export function LatencyChart({ data, loading }: LatencyChartProps) {
+  const isClient = useIsClient();
   // Compute average for reference line
   const avg =
     data.length > 0
@@ -68,7 +70,7 @@ export function LatencyChart({ data, loading }: LatencyChartProps) {
         </div>
       </CardHeader>
       <CardContent>
-        {loading ? (
+        {loading || !isClient ? (
           <div className="h-40 bg-muted animate-pulse rounded-lg" />
         ) : (
           <ResponsiveContainer width="100%" height={160}>
