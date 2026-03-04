@@ -8,6 +8,7 @@ import { ModelStatsTable } from "@/components/models/model-stats-table";
 import { ModelCostChart } from "@/components/models/model-cost-chart";
 import { ModelRadarChart } from "@/components/models/model-radar-chart";
 import { ModelLatencyChart } from "@/components/models/model-latency-chart";
+import { ModelP95Chart } from "@/components/models/model-p95-chart";
 
 const RANGES = [
   { label: "24h", days: 1 },
@@ -82,6 +83,9 @@ export function ModelsView() {
         <ModelCostChart models={filteredForCharts} loading={loading} />
         <ModelLatencyChart models={filteredForCharts} loading={loading} />
       </div>
+
+      {/* P95 Latency Distribution — full width */}
+      <ModelP95Chart models={filteredForCharts} loading={loading} />
 
       {/* Radar chart — full width */}
       <ModelRadarChart models={filteredForCharts} loading={loading} />
