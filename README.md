@@ -26,13 +26,16 @@ RouteIQ solves this with a single dashboard that answers:
 ## Features
 
 ### 📊 Overview Dashboard
-KPI cards with delta indicators vs. previous period — total requests, cost, avg latency, error rate, cache hit rate, active models. Three time-series charts (request volume, daily cost, latency trend) plus a summary stats panel. Date range picker: 24h / 7d / 30d.
+KPI cards with delta indicators vs. previous period — total requests, cost, avg latency, error rate, cache hit rate, active models. Three time-series charts (request volume, daily cost with **anomaly detection**, latency trend) plus a summary stats panel. Date range picker: 24h / 7d / 30d. Cost bars that spike more than 2× the period average are highlighted in red with a tooltip showing the exact multiplier ("2.3× above average").
+
+### ⌨️ Command Palette
+`Cmd+K` / `Ctrl+K` opens a floating command palette with fuzzy search across all dashboard sections. Navigate with arrow keys, confirm with Enter, dismiss with Esc. Instant keyboard-first navigation — no mouse required.
 
 ### 🤖 Model Comparison
-Side-by-side stats table for every model with sortable columns (cost, latency, P95, success rate, cache hit rate). Multi-select radar chart for normalized multi-dimension comparison across 5 axes: Volume, Cost Efficiency, Speed, Reliability, Cache Efficiency.
+Side-by-side stats table for every model with sortable columns (cost, latency, P95, success rate, cache hit rate, **cost per 1k tokens**). Each model gets a **Health Score** (A–F grade) computed from a weighted formula: Reliability 40% + Speed 30% + Cost Efficiency 20% + Cache 10% — hover the grade badge to see the full breakdown. Multi-select radar chart for normalized multi-dimension comparison across 5 axes: Volume, Cost Efficiency, Speed, Reliability, Cache Efficiency.
 
 ### 🔍 Request Log Explorer
-Filterable, paginated log table — filter by model, status (success/error/cached), date range. Click any row for a full detail sheet: token breakdown (prompt vs. completion), cost, latency, cache status, API key alias.
+Filterable, paginated log table — filter by model, status (success/error/cached), date range. Click any row for a full detail sheet: token breakdown (prompt vs. completion), cost, latency, cache status, API key alias. Timestamps display as relative time ("2 minutes ago") with exact UTC datetime on hover.
 
 ### 💰 Budget & Cost Forecasting
 Gauge cards for daily and monthly spend with severity color-coding (green → amber → red). Area chart with historical spend + projected burn rate through end of month. Configurable budget alert banner.
@@ -242,7 +245,8 @@ src/
 │   │   ├── adapter.ts          # OpenRouterAdapter implements IDataAdapter
 │   │   └── types.ts            # Raw OpenRouter API response types
 │   └── utils/
-│       └── formatting.ts       # formatCost(), formatLatency(), etc.
+│       ├── formatting.ts       # formatCost(), formatLatency(), etc.
+│       └── health-score.ts     # computeHealthScores() — weighted A–F model grading
 └── types/
     └── index.ts                # Domain types + IDataAdapter interface
 ```
@@ -271,7 +275,11 @@ Recharts' `ResponsiveContainer` uses `ResizeObserver` to measure the DOM. During
 - [ ] **Alert system** — email/Slack notifications when budget thresholds are crossed
 - [ ] **Custom routing rules** — UI to configure which models handle which request patterns
 - [ ] **Multi-workspace support** — separate views per team/project
-- [ ] **Export** — CSV download for request logs and cost reports
+- [x] **Export** — CSV download for request logs and cost reports
+- [x] **Cost anomaly detection** — automatic spike detection with visual highlighting
+- [x] **Model health scorecard** — weighted A–F grade with per-axis breakdown
+- [x] **Command palette** — keyboard-first navigation with fuzzy search
+- [x] **Cost per 1k tokens** — normalized cost metric for apples-to-apples model comparison
 
 ---
 
