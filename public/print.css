@@ -1,0 +1,85 @@
+/* RouteIQ — Print / PDF Export Stylesheet */
+
+@media print {
+  /* ── Reset page margins ── */
+  @page {
+    margin: 1.2cm 1cm;
+    size: A4 landscape;
+  }
+
+  /* ── Hide chrome that doesn't belong in the report ── */
+  aside,
+  nav,
+  [data-sonner-toaster],
+  [data-radix-toast-viewport],
+  .no-print {
+    display: none !important;
+  }
+
+  /* ── Full-width main content ── */
+  body {
+    background: #fff !important;
+    color: #111 !important;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+
+  /* Make the flex container just show the main content */
+  .flex.h-screen {
+    display: block !important;
+  }
+
+  main {
+    overflow: visible !important;
+    width: 100% !important;
+  }
+
+  /* ── Export header injected before the dashboard ── */
+  #dashboard-content::before {
+    content: "RouteIQ Dashboard Export — " attr(data-export-date);
+    display: block;
+    font-size: 11pt;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 6pt;
+    margin-bottom: 14pt;
+  }
+
+  /* ── Dashboard container ── */
+  #dashboard-content {
+    padding: 0 !important;
+  }
+
+  /* ── KPI grid: 3 columns in print ── */
+  #dashboard-content .grid {
+    display: grid !important;
+  }
+
+  /* ── Charts: prevent mid-chart page breaks ── */
+  #dashboard-content .bg-card {
+    break-inside: avoid;
+    border: 1px solid #e5e7eb !important;
+    background: #fff !important;
+    color: #111 !important;
+    border-radius: 8px;
+  }
+
+  /* ── Headings & text ── */
+  h1, h2, h3, p, span, td, th {
+    color: #111 !important;
+  }
+
+  .text-muted-foreground {
+    color: #555 !important;
+  }
+
+  /* Recharts SVG — keep visible */
+  svg {
+    overflow: visible !important;
+  }
+
+  /* ── Hide the export button itself ── */
+  #export-btn {
+    display: none !important;
+  }
+}

@@ -9,6 +9,8 @@ import { RequestVolumeChart } from "@/components/dashboard/request-volume-chart"
 import { CostChart } from "@/components/dashboard/cost-chart";
 import { LatencyChart } from "@/components/dashboard/latency-chart";
 import { DateRangePicker } from "@/components/dashboard/date-range-picker";
+import { RefreshIndicator } from "@/components/layout/refresh-indicator";
+import { ExportButton } from "@/components/layout/export-button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useProviderHeaders } from "@/contexts/provider-config-context";
 import {
@@ -82,7 +84,7 @@ export function OverviewDashboard() {
   const isEmpty = !loading && stats !== null && stats.totalRequests === 0 && dataSource !== "mock";
 
   return (
-    <div className="p-6 space-y-6">
+    <div id="dashboard-content" className="p-6 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -94,14 +96,18 @@ export function OverviewDashboard() {
             Monitor your LLM traffic, costs, and performance.
           </p>
         </div>
-        <DateRangePicker
-          ranges={RANGES}
-          selected={rangeDays}
-          onSelect={(days) => {
-            setRangeDays(days);
-            router.replace(`?range=${days}`);
-          }}
-        />
+        <div className="flex items-center gap-3">
+          <ExportButton />
+          <RefreshIndicator intervalSeconds={30} onRefresh={fetchData} />
+          <DateRangePicker
+            ranges={RANGES}
+            selected={rangeDays}
+            onSelect={(days) => {
+              setRangeDays(days);
+              router.replace(`?range=${days}`);
+            }}
+          />
+        </div>
       </div>
 
       {/* Empty state banner for real data source with no usage yet */}
