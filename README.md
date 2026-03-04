@@ -283,4 +283,4 @@ RouteIQ is designed to complement tools like LiteLLM, not replace them. LiteLLM 
 
 ---
 
-*MIT License — built by Eduardo*
+*MIT License — built by Eduard Barrera*
