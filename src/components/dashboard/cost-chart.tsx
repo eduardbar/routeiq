@@ -100,7 +100,7 @@ export function CostChart({ data, loading }: CostChartProps) {
         ) : (
           <ResponsiveContainer width="100%" height={210}>
             <BarChart data={data} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
               <XAxis
                 dataKey="timestamp"
                 tickFormatter={(val) => {
@@ -110,19 +110,19 @@ export function CostChart({ data, loading }: CostChartProps) {
                     return val;
                   }
                 }}
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(v) => `$${v.toFixed(2)}`}
               />
               <Tooltip
                 content={<CustomTooltip anomalies={anomalies} mean={mean} />}
-                cursor={{ fill: "hsl(var(--muted))" }}
+                cursor={{ fill: "#1f2937" }}
               />
               <Bar dataKey="costUsd" name="Cost" radius={[4, 4, 0, 0]} maxBarSize={40}>
                 {data.map((entry) => (

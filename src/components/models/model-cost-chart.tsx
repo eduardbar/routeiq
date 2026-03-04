@@ -85,10 +85,10 @@ export function ModelCostChart({ models, loading }: ModelCostChartProps) {
               layout="vertical"
               margin={{ top: 0, right: 16, left: 8, bottom: 0 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" horizontal={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" horizontal={false} />
               <XAxis
                 type="number"
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(v) => formatCost(v)}
@@ -97,11 +97,11 @@ export function ModelCostChart({ models, loading }: ModelCostChartProps) {
                 type="category"
                 dataKey="model"
                 width={110}
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
               />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: "hsl(var(--muted))" }} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: "#1f2937" }} />
               <Bar dataKey="totalCostUsd" radius={[0, 4, 4, 0]} maxBarSize={20}>
                 {/* Cell: colorea cada barra con el color del provider */}
                 {data.map((entry) => (

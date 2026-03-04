@@ -76,7 +76,7 @@ export function LatencyChart({ data, loading }: LatencyChartProps) {
           <ResponsiveContainer width="100%" height={160}>
             {/* LineChart: ideal para tendencias continuas */}
             <LineChart data={data} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
               <XAxis
                 dataKey="timestamp"
                 tickFormatter={(val) => {
@@ -86,12 +86,12 @@ export function LatencyChart({ data, loading }: LatencyChartProps) {
                     return val;
                   }
                 }}
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(v) => `${v}ms`}

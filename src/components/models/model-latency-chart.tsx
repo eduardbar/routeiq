@@ -69,20 +69,20 @@ export function ModelLatencyChart({ models, loading }: ModelLatencyChartProps) {
         ) : (
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={data} margin={{ top: 4, right: 4, left: -16, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
               <XAxis
                 dataKey="model"
-                tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 10, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(v) => `${v}ms`}
               />
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: "hsl(var(--muted))" }} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: "#1f2937" }} />
 
               {/* Reference line: average across selected models */}
               {avg > 0 && (

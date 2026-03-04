@@ -87,8 +87,8 @@ export function RequestVolumeChart({ data, loading }: RequestVolumeChartProps) {
               {/* Gradientes SVG para el área rellena */}
               <defs>
                 <linearGradient id="requestsGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0} />
+                  <stop offset="5%" stopColor="#6366f1" stopOpacity={0.45} />
+                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0.05} />
                 </linearGradient>
                 <linearGradient id="errorsGradient" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#ef4444" stopOpacity={0.3} />
@@ -96,7 +96,7 @@ export function RequestVolumeChart({ data, loading }: RequestVolumeChartProps) {
                 </linearGradient>
               </defs>
 
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
 
               {/* XAxis: formatea el timestamp ISO a "Dec 25" */}
               <XAxis
@@ -108,13 +108,13 @@ export function RequestVolumeChart({ data, loading }: RequestVolumeChartProps) {
                     return val;
                   }
                 }}
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
               />
 
               <YAxis
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(v) => (v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v)}

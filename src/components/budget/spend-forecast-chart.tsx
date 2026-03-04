@@ -152,26 +152,26 @@ export function SpendForecastChart({
             <AreaChart data={data} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
               <defs>
                 <linearGradient id="gradActual" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#6366f1" stopOpacity={0.25} />
-                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0.02} />
+                  <stop offset="5%"  stopColor="#6366f1" stopOpacity={0.40} />
+                  <stop offset="95%" stopColor="#6366f1" stopOpacity={0.05} />
                 </linearGradient>
                 <linearGradient id="gradProjected" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor="#f59e0b" stopOpacity={0.20} />
-                  <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.02} />
+                  <stop offset="5%"  stopColor="#f59e0b" stopOpacity={0.35} />
+                  <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.05} />
                 </linearGradient>
               </defs>
 
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
 
               <XAxis
                 dataKey="date"
-                tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 10, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
                 interval="preserveStartEnd"
               />
               <YAxis
-                tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 11, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(v) => formatCost(v)}
@@ -182,14 +182,14 @@ export function SpendForecastChart({
               {/* "Today" marker */}
               <ReferenceLine
                 x={todayLabel}
-                stroke="hsl(var(--muted-foreground))"
+                stroke="#6b7280"
                 strokeDasharray="4 4"
-                strokeOpacity={0.5}
+                strokeOpacity={0.7}
                 label={{
                   value: "Today",
                   position: "insideTopLeft",
                   fontSize: 10,
-                  fill: "hsl(var(--muted-foreground))",
+                  fill: "#9ca3af",
                 }}
               />
 

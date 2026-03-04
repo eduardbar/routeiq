@@ -113,23 +113,24 @@ export function ModelRadarChart({ models, loading }: ModelRadarChartProps) {
         ) : (
           <ResponsiveContainer width="100%" height={300}>
             <RadarChart data={data} margin={{ top: 16, right: 32, bottom: 16, left: 32 }}>
-              <PolarGrid stroke="hsl(var(--border))" />
+              <PolarGrid stroke="#374151" />
               <PolarAngleAxis
                 dataKey="subject"
-                tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 12, fill: "#9ca3af" }}
               />
               <PolarRadiusAxis
                 angle={30}
                 domain={[0, 100]}
-                tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 10, fill: "#9ca3af" }}
                 tickCount={4}
               />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "hsl(var(--card))",
-                  border: "1px solid hsl(var(--border))",
+                  backgroundColor: "#111827",
+                  border: "1px solid #374151",
                   borderRadius: "8px",
                   fontSize: "12px",
+                  color: "#f9fafb",
                 }}
               />
 

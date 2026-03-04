@@ -153,12 +153,12 @@ export function ModelP95Chart({ models, loading }: ModelP95ChartProps) {
             >
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke="hsl(var(--border))"
+                stroke="#374151"
                 vertical={false}
               />
               <XAxis
                 dataKey="model"
-                tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 10, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(v: string) => {
@@ -169,14 +169,14 @@ export function ModelP95Chart({ models, loading }: ModelP95ChartProps) {
                 }}
               />
               <YAxis
-                tick={{ fontSize: 10, fill: "hsl(var(--muted-foreground))" }}
+                tick={{ fontSize: 10, fill: "#9ca3af" }}
                 axisLine={false}
                 tickLine={false}
                 tickFormatter={(v: number) => `${v}ms`}
               />
               <Tooltip
                 content={<CustomTooltip />}
-                cursor={{ fill: "hsl(var(--muted))", opacity: 0.5 }}
+                cursor={{ fill: "#1f2937", opacity: 0.5 }}
               />
               <Legend
                 iconType="square"
