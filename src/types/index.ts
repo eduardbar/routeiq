@@ -59,6 +59,8 @@ export interface OverviewStats {
   costDelta: number;
   latencyDelta: number;
   errorRateDelta: number;
+  cacheHitRateDelta: number;
+  activeModelsDelta: number;
 }
 
 // A data point for time-series charts

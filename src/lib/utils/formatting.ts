@@ -26,7 +26,7 @@ export function formatCost(usd: number): string {
   if (usd === 0) return "$0.00";
   if (usd < 0.0001) return `$${(usd * 1_000_000).toFixed(1)}µ`;
   if (usd < 0.01)   return `$${(usd * 1000).toFixed(2)}m`;
-  if (usd < 1)      return `$${usd.toFixed(4)}`;
+  if (usd < 1)      return `$${usd.toFixed(2)}`;
   if (usd < 100)    return `$${usd.toFixed(2)}`;
   return `$${usd.toFixed(0)}`;
 }

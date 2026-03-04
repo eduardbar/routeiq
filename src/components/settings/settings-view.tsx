@@ -199,12 +199,20 @@ export function SettingsView() {
 
           <Alert>
             <Info className="h-4 w-4" />
-            <AlertDescription className="text-xs">
-              To switch data sources, update <code className="bg-muted px-1 rounded">NEXT_PUBLIC_DATA_SOURCE</code> in your{" "}
-              <code className="bg-muted px-1 rounded">.env.local</code> file and restart the dev server.
-              Valid values: <code className="bg-muted px-1 rounded">mock</code>,{" "}
-              <code className="bg-muted px-1 rounded">openrouter</code>,{" "}
-              <code className="bg-muted px-1 rounded">litellm</code>.
+            <AlertDescription>
+              <p className="text-xs leading-relaxed">
+                {"To switch data sources, set "}
+                <code className="bg-muted px-1 rounded">NEXT_PUBLIC_DATA_SOURCE</code>
+                {" to "}
+                <code className="bg-muted px-1 rounded">mock</code>
+                {", "}
+                <code className="bg-muted px-1 rounded">openrouter</code>
+                {", or "}
+                <code className="bg-muted px-1 rounded">litellm</code>
+                {" in your "}
+                <code className="bg-muted px-1 rounded">.env.local</code>
+                {" and restart the dev server."}
+              </p>
             </AlertDescription>
           </Alert>
         </CardContent>

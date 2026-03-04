@@ -251,6 +251,7 @@ export function computeOverviewStats(current: RequestLog[], previous: RequestLog
   const delta = (c: number, p: number) => (p === 0 ? 0 : ((c - p) / p) * 100);
 
   const models = new Set(current.map((l) => l.model));
+  const prevModels = new Set(previous.map((l) => l.model));
 
   return {
     totalRequests: cur.total,
@@ -263,6 +264,8 @@ export function computeOverviewStats(current: RequestLog[], previous: RequestLog
     costDelta: delta(cur.cost, prev.cost),
     latencyDelta: delta(cur.avgLatency, prev.avgLatency),
     errorRateDelta: cur.errorRate - prev.errorRate,
+    cacheHitRateDelta: cur.cacheHitRate - prev.cacheHitRate,
+    activeModelsDelta: models.size - prevModels.size,
   };
 }
 

@@ -174,6 +174,8 @@ export class OpenRouterAdapter implements IDataAdapter {
       costDelta: pct(curr.cost, prev.cost),
       latencyDelta: 0,
       errorRateDelta: 0,
+      cacheHitRateDelta: 0, // not available in aggregate API
+      activeModelsDelta: 0, // not available in aggregate API
     };
   }
 

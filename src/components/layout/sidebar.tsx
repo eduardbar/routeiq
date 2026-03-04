@@ -14,7 +14,6 @@ import {
   Activity,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 
 const SOURCE_LABELS: Record<string, { label: string; color: string }> = {
   mock:       { label: "Mock data",   color: "bg-gray-500" },
@@ -47,7 +46,6 @@ const NAV_ITEMS = [
     label: "Optimizer",
     href: "/optimizer",
     icon: Zap,
-    badge: "AI",
   },
 ];
 
@@ -94,14 +92,6 @@ export function Sidebar() {
             >
               <item.icon className="w-4 h-4 shrink-0" />
               <span className="flex-1">{item.label}</span>
-              {item.badge && (
-                <Badge
-                  variant="secondary"
-                  className="text-[10px] px-1.5 py-0 h-4 bg-primary/20 text-primary border-0"
-                >
-                  {item.badge}
-                </Badge>
-              )}
             </Link>
           );
         })}

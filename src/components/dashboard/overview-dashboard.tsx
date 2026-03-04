@@ -17,6 +17,7 @@ import {
   Layers,
   Zap,
   Info,
+  LayoutDashboard,
 } from "lucide-react";
 
 const RANGES = [
@@ -75,7 +76,10 @@ export function OverviewDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">Overview</h1>
+          <h1 className="text-2xl font-bold flex items-center gap-2">
+            <LayoutDashboard className="w-6 h-6 text-primary" />
+            Overview
+          </h1>
           <p className="text-sm text-muted-foreground mt-0.5">
             Monitor your LLM traffic, costs, and performance
           </p>
@@ -140,7 +144,7 @@ export function OverviewDashboard() {
         <KpiCard
           title="Cache Hit Rate"
           value={stats?.cacheHitRate ?? 0}
-          delta={undefined}
+          delta={stats?.cacheHitRateDelta}
           format="percent"
           icon={Zap}
           loading={loading}
