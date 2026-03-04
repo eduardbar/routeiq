@@ -12,6 +12,7 @@ import {
   Zap,
   Settings,
   Activity,
+  Search,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -116,6 +117,20 @@ export function Sidebar() {
             <div className={`w-2 h-2 rounded-full ${sourceInfo.color} animate-pulse`} />
             <span className="text-xs text-muted-foreground">{sourceInfo.label} active</span>
           </div>
+          <button
+            className="mt-2 w-full flex items-center justify-between px-2 py-1.5 rounded-md border border-border text-xs text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+            onClick={() => {
+              window.dispatchEvent(
+                new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true })
+              );
+            }}
+          >
+            <span className="flex items-center gap-1.5">
+              <Search className="w-3 h-3" />
+              Quick nav
+            </span>
+            <kbd className="text-[10px] border border-border rounded px-1">⌘K</kbd>
+          </button>
         </div>
       </div>
     </aside>

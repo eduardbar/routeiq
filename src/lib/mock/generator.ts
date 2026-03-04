@@ -357,6 +357,8 @@ export function computeModelStats(logs: RequestLog[]): ModelStats[] {
       const totalToks = modelLogs.reduce((s, l) => s + l.totalTokens, 0);
       const completionToks = modelLogs.reduce((s, l) => s + l.completionTokens, 0);
       const tokenEfficiency = totalToks > 0 ? (completionToks / totalToks) * 100 : 0;
+      const totalCost = modelLogs.reduce((s, l) => s + l.costUsd, 0);
+      const costPer1kTokens = totalToks > 0 ? (totalCost / totalToks) * 1000 : 0;
 
       return {
         model,
@@ -375,6 +377,7 @@ export function computeModelStats(logs: RequestLog[]): ModelStats[] {
         cacheHitRate:
           (modelLogs.filter((l) => l.cacheHit).length / modelLogs.length) * 100,
         tokenEfficiency,
+        costPer1kTokens,
       };
     })
     .sort((a, b) => b.totalRequests - a.totalRequests);

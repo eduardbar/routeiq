@@ -46,6 +46,8 @@ export interface ModelStats {
   cacheHitRate: number; // 0-100
   /** completion tokens / total tokens × 100. Higher = more output per token spent */
   tokenEfficiency: number; // 0-100, percentage of tokens that are completion (output)
+  /** total cost / total tokens × 1000. Lower = cheaper per 1k tokens */
+  costPer1kTokens: number; // USD per 1,000 tokens
 }
 
 // KPI snapshot for the overview cards

@@ -238,6 +238,7 @@ export class OpenRouterAdapter implements IDataAdapter {
     return Array.from(grouped.entries()).map(([model, stats]) => {
       const totalToks = stats.inputTokens + stats.outputTokens;
       const tokenEfficiency = totalToks > 0 ? (stats.outputTokens / totalToks) * 100 : 0;
+      const costPer1kTokens = totalToks > 0 ? (stats.cost / totalToks) * 1000 : 0;
 
       return {
         model: shortModelName(model),
@@ -251,6 +252,7 @@ export class OpenRouterAdapter implements IDataAdapter {
         avgCostPerRequest: stats.requests > 0 ? stats.cost / stats.requests : 0,
         cacheHitRate: 0,  // not available
         tokenEfficiency,
+        costPer1kTokens,
       };
     });
   }

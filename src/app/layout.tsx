@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import { BudgetToaster } from "@/components/layout/budget-toaster";
+import { CommandPalette } from "@/components/layout/command-palette";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default function RootLayout({
           <div className="flex h-screen overflow-hidden">
             <Sidebar />
             <BudgetToaster />
+            <CommandPalette />
             <main className="flex-1 overflow-auto">{children}</main>
           </div>
         </TooltipProvider>

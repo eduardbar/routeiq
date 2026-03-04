@@ -1,6 +1,6 @@
 "use client";
 
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import {
   Table,
   TableBody,
@@ -11,6 +11,11 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip as UITooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { RequestLog, RequestStatus } from "@/types";
 import { formatCost, formatLatency, getProviderConfig } from "@/lib/utils/formatting";
 
@@ -93,9 +98,18 @@ export function LogsTable({ logs, loading, onSelect }: LogsTableProps) {
                   className="border-border/40 cursor-pointer hover:bg-muted/20 transition-colors"
                   onClick={() => onSelect(log)}
                 >
-                  {/* Timestamp */}
+                  {/* Timestamp — relative with exact tooltip */}
                   <TableCell className="font-mono text-[11px] text-muted-foreground whitespace-nowrap">
-                    {format(new Date(log.timestamp), "MMM d, HH:mm:ss")}
+                    <UITooltip>
+                      <TooltipTrigger asChild>
+                        <span className="cursor-default">
+                          {formatDistanceToNow(new Date(log.timestamp), { addSuffix: true })}
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" className="text-xs font-mono">
+                        {format(new Date(log.timestamp), "yyyy-MM-dd HH:mm:ss 'UTC'")}
+                      </TooltipContent>
+                    </UITooltip>
                   </TableCell>
 
                   {/* Model */}
