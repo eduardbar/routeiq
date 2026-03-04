@@ -3,12 +3,13 @@
 // Single point of truth for which data source is active.
 // Reads NEXT_PUBLIC_DATA_SOURCE env var:
 //   "mock"       → MockAdapter (default, no keys needed)
-//   "openrouter" → OpenRouterAdapter
-//   "litellm"    → LiteLLMAdapter
+//   "openrouter" → OpenRouterAdapter (requires OPENROUTER_API_KEY)
+//   "litellm"    → LiteLLMAdapter (requires LITELLM_BASE_URL + LITELLM_MASTER_KEY)
 // ============================================================
 
 import type { IDataAdapter } from "@/types";
 import { MockAdapter } from "./mock/adapter";
+import { OpenRouterAdapter } from "./openrouter/adapter";
 
 export type AdapterType = "mock" | "openrouter" | "litellm";
 
@@ -20,13 +21,21 @@ export function getAdapter(): IDataAdapter {
   const source = (process.env.NEXT_PUBLIC_DATA_SOURCE ?? "mock") as AdapterType;
 
   switch (source) {
-    case "openrouter":
-      // Will be implemented on Day 6
-      console.warn("[RouteIQ] OpenRouter adapter not yet implemented, falling back to mock");
-      instance = new MockAdapter();
+    case "openrouter": {
+      const apiKey = process.env.OPENROUTER_API_KEY ?? "";
+      if (!apiKey) {
+        console.warn(
+          "[RouteIQ] OPENROUTER_API_KEY is not set — falling back to mock. " +
+          "Set it in .env.local to use real data."
+        );
+        instance = new MockAdapter();
+      } else {
+        instance = new OpenRouterAdapter(apiKey);
+      }
       break;
+    }
     case "litellm":
-      // Will be implemented on Day 6
+      // Will be implemented on Day 7
       console.warn("[RouteIQ] LiteLLM adapter not yet implemented, falling back to mock");
       instance = new MockAdapter();
       break;
