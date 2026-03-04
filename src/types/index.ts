@@ -44,6 +44,8 @@ export interface ModelStats {
   totalTokens: number;
   avgCostPerRequest: number;
   cacheHitRate: number; // 0-100
+  /** completion tokens / total tokens × 100. Higher = more output per token spent */
+  tokenEfficiency: number; // 0-100, percentage of tokens that are completion (output)
 }
 
 // KPI snapshot for the overview cards

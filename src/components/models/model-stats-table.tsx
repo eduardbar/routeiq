@@ -85,6 +85,7 @@ export function ModelStatsTable({
             <TableHead className="text-right">P95 Latency</TableHead>
             <TableHead className="text-right">Success Rate</TableHead>
             <TableHead className="text-right">Cache Hit</TableHead>
+            <TableHead className="text-right" title="completion tokens / total tokens">Token Eff.</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -196,6 +197,22 @@ export function ModelStatsTable({
                 {/* Cache hit rate */}
                 <TableCell className="text-right text-sm tabular-nums text-muted-foreground">
                   {formatPercent(model.cacheHitRate)}
+                </TableCell>
+
+                {/* Token efficiency */}
+                <TableCell className="text-right">
+                  {(() => {
+                    const eff = model.tokenEfficiency;
+                    const color = eff > 40 ? "#10b981" : eff >= 20 ? "#f59e0b" : "#ef4444";
+                    return (
+                      <div className="flex items-center justify-end gap-2">
+                        <MiniBar value={eff} max={100} color={color} />
+                        <span className="text-sm tabular-nums font-medium" style={{ color }}>
+                          {eff.toFixed(1)}%
+                        </span>
+                      </div>
+                    );
+                  })()}
                 </TableCell>
               </TableRow>
             );

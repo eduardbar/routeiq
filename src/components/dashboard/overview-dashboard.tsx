@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { subDays } from "date-fns";
 import type { OverviewStats, TimeSeriesPoint } from "@/types";
 import { KpiCard } from "@/components/dashboard/kpi-card";
@@ -27,7 +28,12 @@ const RANGES = [
 ];
 
 export function OverviewDashboard() {
-  const [rangeDays, setRangeDays] = useState(7);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const [rangeDays, setRangeDays] = useState(
+    parseInt(searchParams.get("range") ?? "7", 10) || 7
+  );
   const [stats, setStats] = useState<OverviewStats | null>(null);
   const [timeSeries, setTimeSeries] = useState<TimeSeriesPoint[]>([]);
   const [loading, setLoading] = useState(true);
@@ -87,7 +93,10 @@ export function OverviewDashboard() {
         <DateRangePicker
           ranges={RANGES}
           selected={rangeDays}
-          onSelect={setRangeDays}
+          onSelect={(days) => {
+            setRangeDays(days);
+            router.replace(`?range=${days}`);
+          }}
         />
       </div>
 

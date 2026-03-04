@@ -354,6 +354,10 @@ export function computeModelStats(logs: RequestLog[]): ModelStats[] {
       const sorted = [...modelLogs].sort((a, b) => a.latencyMs - b.latencyMs);
       const p95Idx = Math.floor(sorted.length * 0.95);
 
+      const totalToks = modelLogs.reduce((s, l) => s + l.totalTokens, 0);
+      const completionToks = modelLogs.reduce((s, l) => s + l.completionTokens, 0);
+      const tokenEfficiency = totalToks > 0 ? (completionToks / totalToks) * 100 : 0;
+
       return {
         model,
         provider: modelLogs[0].provider,
@@ -370,6 +374,7 @@ export function computeModelStats(logs: RequestLog[]): ModelStats[] {
           modelLogs.reduce((s, l) => s + l.costUsd, 0) / modelLogs.length,
         cacheHitRate:
           (modelLogs.filter((l) => l.cacheHit).length / modelLogs.length) * 100,
+        tokenEfficiency,
       };
     })
     .sort((a, b) => b.totalRequests - a.totalRequests);

@@ -235,18 +235,24 @@ export class OpenRouterAdapter implements IDataAdapter {
       });
     }
 
-    return Array.from(grouped.entries()).map(([model, stats]) => ({
-      model: shortModelName(model),
-      provider: inferProvider(model),
-      totalRequests: stats.requests,
-      successRate: 100, // not available in aggregate API — assume success
-      avgLatencyMs: 0,  // not available
-      p95LatencyMs: 0,  // not available
-      totalCostUsd: stats.cost,
-      totalTokens: stats.inputTokens + stats.outputTokens,
-      avgCostPerRequest: stats.requests > 0 ? stats.cost / stats.requests : 0,
-      cacheHitRate: 0,  // not available
-    }));
+    return Array.from(grouped.entries()).map(([model, stats]) => {
+      const totalToks = stats.inputTokens + stats.outputTokens;
+      const tokenEfficiency = totalToks > 0 ? (stats.outputTokens / totalToks) * 100 : 0;
+
+      return {
+        model: shortModelName(model),
+        provider: inferProvider(model),
+        totalRequests: stats.requests,
+        successRate: 100, // not available in aggregate API — assume success
+        avgLatencyMs: 0,  // not available
+        p95LatencyMs: 0,  // not available
+        totalCostUsd: stats.cost,
+        totalTokens: totalToks,
+        avgCostPerRequest: stats.requests > 0 ? stats.cost / stats.requests : 0,
+        cacheHitRate: 0,  // not available
+        tokenEfficiency,
+      };
+    });
   }
 
   async getRequestLogs(options: {
